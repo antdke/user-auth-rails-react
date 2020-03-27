@@ -1,4 +1,5 @@
 class SessionsController < ApplicationController
+  # Handles User logging in and out
 
   # creates a new session aka "user logs back in"
   def create
