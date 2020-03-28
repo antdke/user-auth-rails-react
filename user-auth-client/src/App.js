@@ -1,11 +1,72 @@
-import React from 'react';
+import React, { Component } from 'react';
+import axios from 'axios';
+import { BrowserRouter, Switch, Route } from 'react-router-dom';
 
-function App() {
-  return (
-    <div>
-      <p>Hello World!</p>
-    </div>
-  );
+/**
+ * App.js serves as the router to render other components
+ * Will manage app state and auth status
+ * Will maintain logged in status of a user and store user data from the server as requested
+ */
+
+class App extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      isLoggedIn: false,
+      user: {},
+    };
+  }
+
+  /**
+   * Keeps track of user's login status & requests info it's mounted (aka 'activated')
+   */
+  componentDidMount(){
+    this.loginStatus()
+  }
+
+  /**
+   * Backbone of our front-end authorization
+   */
+  loginStatus = () => {
+    axios.get('http:localhost:3001/logged_in',{withCredentials: true})
+
+    .then(response => {
+      if (response.data.logged_in) {
+        this.handleLogin(response)
+      } else {
+        this.handleLogout()
+      }
+    })
+    .catch(error => console.log('api errors:', error))
+  }
+
+  handleLogin = (data) => {
+    this.setState({
+      isLoggedIn: true,
+      user: data.user
+    })
+  }
+
+  handleLogout = () => {
+    this.setState({
+      isLoggedIn: false,
+      user: {}
+    })
+  }
+
+  render() {
+    return (
+      <div>
+        <BrowserRouter>
+          <Switch>
+            <Route exact path='/' component={}/>
+            <Route exact path='/login' component={} />
+            <Route exact path='/signup' component={} />
+          </Switch>
+        </BrowserRouter>
+      </div>
+    );
+  }
 }
 
 export default App;
